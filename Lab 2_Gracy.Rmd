@@ -1,0 +1,155 @@
+---
+title: "SLEEP PATTERNS BY DIET"
+author: "GRACY CHANGIRALA"
+date: "`r Sys.Date()`"
+output:
+  word_document: 
+    toc: true
+    fig_caption: true
+    keep_md: true
+    fig_width: 7
+    fig_height: 5.5
+  pdf_document: default
+  html_document: 
+    toc: true
+    fig_caption: true
+    number_sections: true
+---
+# Loading the libraries and Viewing Data
+```{r}
+library(tidyverse)
+data()
+view(msleep)
+```
+*This code loads the 'tidyverse', package, which is a collection of packages in R for Data manipulation and visualisation. The 'data()' function lists all available datasets in R, and 'view(msleep)' opens the 'msleep' dataset in a new tab for inspections.*
+
+
+# Descriptive Statistics on 'msleep' Data
+```{r}
+# Describe the spread, centrality and variance of the data
+min(msleep$awake)
+max(msleep$awake)
+range(msleep$awake)
+IQR(msleep$awake)
+mean(msleep$awake)
+median(msleep$awake)
+var(msleep$awake)
+```
+**These statistics give us the insights into the distribution and variability of the 'awake' variable.**
+
+*This block of code calculates basic descriptive statistics for the 'awake' variable in the 'msleep' dataset:*
+
+**- 'min()', 'max()', 'range()'**: *Calculates the minumum, maximum and ranges of the dataset.*
+
+**- 'IQR()'**: *Interquartile range, showing the spread of the middle 50% of the data.*
+
+**-'mean()', 'median()'"**: *Central tendency measures.*
+
+**- 'var()'**: *Variance, indicating the spread of the data.*
+
+
+
+# Summary Statistics for the Entire Dataset
+```{r}
+#Summarise selected variables
+summary(msleep)
+summary(msleep$sleep_total)
+
+msleep %>% 
+  select(sleep_total, brainwt) %>%
+  summary
+```
+**Summary statistics gives and overview of each variable, helping identify trends, outliners, and missing values.**
+
+
+**- 'summary(msleep)'**: *Provides summary statistics for all variable in the 'msleep' dataset.*
+
+**- 'summary(msleep$sleep_total)'**: *Specifically summarizes the 'sleep_total' variable.*
+
+**- 'select(sleep_total, brainwt) %>% summary'**: *Selects the 'sleep_total' and 'brainwt' variables and then summarizes them.*
+
+# Creating a summary Table by Grouping
+```{r}
+# Create a summary table
+msleep %>%
+  drop_na(vore) %>%
+  group_by(vore) %>%
+  summarise(
+    Lower = min(sleep_total),
+    Average = mean(sleep_total),
+    Upper = max(sleep_total),
+    Difference = max(sleep_total) - min(sleep_total)
+  ) %>%
+  arrange(Average)
+```
+**Grouping and summarising data this way helps compare different categories and understand how they differ in terms of sleep patterns.**
+
+*This code creates a summary table for 'sleep_total' based on the 'vore'(dietary category) variable:*
+
+**- 'drop_na(vore)'**: *Remove rows where 'vore' is 'NA'.*
+
+**- 'group_by(vore)'**: *'Groups data by the 'vore' category.*
+
+**- 'summarise()'**: *Calculates the minimum, average, maximum, and range ('Difference') of 'sleep_total' within each 'vore' category.*
+
+**- arrange(Average)'**" *Sorts the results by the average 'sleep_total'.*
+
+# Contingency Tables
+```{r}
+# Creating contingency tables
+library(MASS)
+attach(Cars93)
+
+glimpse(Cars93)
+
+table(Origin)
+table(AirBags, Origin)
+addmargins(table(AirBags, Origin))
+
+table(AirBags, Origin)
+prop.table(table(AirBags, Origin))*100
+round(prop.table(table(AirBags, Origin), 2)*100)
+```
+
+**Contingency tables are useful for exploring relationships between categorical variable.**
+
+**- attach(Cars93)**: *Makes the variables in the Cars93 dataset accessible directly.*
+
+**-  glimpse(Cars93)**: *Provides a quick look at the Cars93 dataset structure.*
+
+**-  table(Origin)**: *Creates a frequency table for the Origin variable.*
+
+**-  table(AirBags, Origin)**: *Creates a contingency table showing the relationship between AirBags and Origin.*
+
+**-  addmargins(table(AirBags, Origin))**: *Adds row and column sums (margins) to the contingency table.*
+
+**-  prop.table()**: *Converts the contingency table into proportions, showing the percentage of each combination.*
+
+
+# Pivoting Data for Summary
+```{r}
+Cars93 %>%
+  group_by(Origin, AirBags) %>%
+  summarise(number = n()) %>%
+  pivot_wider(names_from = Origin,
+              values_from = number)
+```
+**Turning helps in reshaping information, making it more straightforward to picture and analyze bunches next to each other.**
+
+**This code block groups the Cars93 dataset by Origin and AirBags, counts the number of occurrences (n()), and then uses pivot_wider to reshape the data:**
+
+**- group_by(Origin, AirBags)**: *Groups the data by Origin and AirBags.*
+
+**- summarise(number = n())**: *Counts the number of cars in each group.*
+
+**- pivot_wider()**: *Converts the long-format data into a wider format where the Origin categories become separate columns.*
+
+
+# Conclusion
+
+*In the wake of running the above code blocks, you ought to have a complete synopsis and depiction of the msleep and Cars93 datasets. The examination ought to give experiences into the circulation, focal inclination, fluctuation, and connections inside the information.*
+
+*This sort of examination is essential in information science, assisting you with understanding your information prior to applying more complicated models or representations.*
+
+
+
